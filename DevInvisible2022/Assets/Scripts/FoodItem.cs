@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class FoodItem : MonoBehaviour
 {
+    [SerializeField]
+    private float lifeTime = 5.0f;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -14,5 +17,16 @@ public class FoodItem : MonoBehaviour
     void Update()
     {
         
+    }
+
+    private void OnEnable()
+    {
+        StartCoroutine(AutoRecycleItem());
+    }
+
+    private IEnumerator AutoRecycleItem()
+    {
+        yield return new WaitForSeconds(lifeTime);
+        gameObject.SetActive(false);
     }
 }

@@ -345,7 +345,10 @@ MonoBehaviour:
   cat: {fileID: 1357484441}
   foodItems:
   - {fileID: 8281598045363900053, guid: 7144cc694bf272646aff383d12157a85, type: 3}
-  foodSupply: 10
+  - {fileID: 3273096298678849863, guid: 2baa6a654090eee439e91ed9296434eb, type: 3}
+  - {fileID: 8518589667674919525, guid: 4bf6d235703cd8d4e8db9aa659d6b154, type: 3}
+  foodSupply: 12
+  foodSpawnFreq: 0.7
 --- !u!4 &567974333
 Transform:
   m_ObjectHideFlags: 0

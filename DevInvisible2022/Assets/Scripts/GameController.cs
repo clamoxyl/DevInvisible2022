@@ -11,10 +11,16 @@ public class GameController : MonoBehaviour
     private GameObject[] foodItems;
     [SerializeField]
     private int foodSupply = 10;
+    [SerializeField]
+    private float foodSpawnFreq = 1.5f;
 
 
     private List<GameObject> food;
-        
+    private bool startGame = true;
+    private float startTime;
+    private float lastFoodSpawnTime = -Mathf.Infinity;
+
+
     // Start is called before the first frame update
     void Start()
     {
@@ -32,8 +38,8 @@ public class GameController : MonoBehaviour
                 food.Add(newFood);           
             }
         }
-        
 
+        startTime = Time.time;
         //spawn initial food supply
         
 
@@ -43,9 +49,19 @@ public class GameController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
+        /*if (Input.GetKeyDown(KeyCode.Space))
         {
             SpawnFood();
+        }*/
+        FoodSpawnRateControl();
+    }
+
+    void FoodSpawnRateControl()
+    {
+        if (Time.time - lastFoodSpawnTime >= foodSpawnFreq)
+        {
+            SpawnFood();
+            lastFoodSpawnTime = Time.time;
         }
     }
 
@@ -58,13 +74,12 @@ public class GameController : MonoBehaviour
             if (!food[i].activeSelf)
             {
                 Vector2 circle = Random.insideUnitCircle * 3.0f;
-                Vector3 newPos = new Vector3(circle.x + 1.5f, 5.0f, circle.y + 1.5f); // set a random position 1.5 units away from the center, inside a 4.5 units radius circle, 5 units high
-                food[i].transform.rotation = Quaternion.identity;
+                Vector3 newPos = new Vector3(circle.x * 2.0f, 5.0f, circle.y - 3); // set a random position 1.5 units away from the center, inside a 4.5 units radius circle, 5 units high
+                food[i].transform.rotation = Random.rotation;
                 food[i].transform.position = cat.transform.position + newPos;
                 food[i].SetActive(true);
                 return;
-            }
-            
+            }            
         }
     }
 }
