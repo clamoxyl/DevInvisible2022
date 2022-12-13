@@ -1,6 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
+using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class GameController : MonoBehaviour
 {
@@ -13,13 +16,28 @@ public class GameController : MonoBehaviour
     private int foodSupply = 10;
     [SerializeField]
     private float foodSpawnFreq = 1.5f;
+    [SerializeField]
+    LayerMask layerMaskFood;
+    [SerializeField]
+    private int[] levels;
+    [SerializeField]
+    private AudioSource audioSrc;
+    [SerializeField]
+    private AudioClip[] meowClips;
+
+    [Header("UI")]
+    [SerializeField]
+    private TMP_Text levelText;
 
 
     private List<GameObject> food;
     private bool startGame = true;
     private float startTime;
     private float lastFoodSpawnTime = -Mathf.Infinity;
+    private int currentLevel = 1;
+    private List<int> levelCravings;
 
+    private int currentCraving = 0;
 
     // Start is called before the first frame update
     void Start()
@@ -41,8 +59,8 @@ public class GameController : MonoBehaviour
 
         startTime = Time.time;
         //spawn initial food supply
-        
 
+        GenerateLevelCravings(levels[currentLevel]);
         
     }
 
@@ -54,6 +72,8 @@ public class GameController : MonoBehaviour
             SpawnFood();
         }*/
         FoodSpawnRateControl();
+        CheckClickOnFood();
+
     }
 
     void FoodSpawnRateControl()
@@ -81,5 +101,59 @@ public class GameController : MonoBehaviour
                 return;
             }            
         }
+    }
+
+    void GenerateLevelCravings(int amount)
+    {
+        levelCravings = new List<int>();
+        for (int i = 0; i < amount; i++)
+        {
+            levelCravings.Add(Random.Range(1, foodItems.Length));
+        }
+
+        levelText.text = "Level " + currentLevel.ToString();
+    }
+
+    private void NomNom (int foodInMouth)
+    {
+        if (foodInMouth == levelCravings[currentCraving])
+        {
+            currentCraving++;
+            Purr();
+        }
+        else MeowInDisgust();
+
+        Meow(levelCravings[currentCraving]);
+    }
+
+    void CheckClickOnFood()
+    {
+        if (Input.GetMouseButtonDown(0))
+        {
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hitData = new RaycastHit();
+            if (Physics.Raycast(ray, out hitData, 1000, layerMaskFood))
+            {
+                Debug.Log(hitData.collider.gameObject.name);
+                FoodItem clickedFood = hitData.collider.transform.parent.gameObject.GetComponent<FoodItem>();
+                NomNom(clickedFood.FoodID);
+                clickedFood.EatFoodItem();
+            }
+        }
+    }
+
+    void Meow (int craving)
+    {
+
+    }
+
+    void MeowInDisgust()
+    {
+
+    }
+
+    void Purr()
+    {
+
     }
 }
