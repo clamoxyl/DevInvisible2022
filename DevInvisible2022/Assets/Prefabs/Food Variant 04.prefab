@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1001 &6358729452405027064
+--- !u!1001 &3935547278665786222
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -54,35 +54,38 @@ PrefabInstance:
     - target: {fileID: 3724870929334039505, guid: 7144cc694bf272646aff383d12157a85, type: 3}
       propertyPath: m_Mesh
       value: 
-      objectReference: {fileID: -8528147662460700801, guid: 9470370c603d3de4f9fdf0a7c094eaf6, type: 3}
+      objectReference: {fileID: -5439108630884261167, guid: 6751936b11b7b38458724a1e59105acf, type: 3}
     - target: {fileID: 4683802739142401087, guid: 7144cc694bf272646aff383d12157a85, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 554876236779662778, guid: 9470370c603d3de4f9fdf0a7c094eaf6, type: 3}
-    - target: {fileID: 5910355427099375745, guid: 7144cc694bf272646aff383d12157a85, type: 3}
-      propertyPath: foodID
-      value: 3
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 6924281783087301770, guid: 6751936b11b7b38458724a1e59105acf, type: 3}
     - target: {fileID: 8281598045363900053, guid: 7144cc694bf272646aff383d12157a85, type: 3}
       propertyPath: m_Name
-      value: Food Variant 03
+      value: Food Variant 04
+      objectReference: {fileID: 0}
+    - target: {fileID: 8823515282178925912, guid: 7144cc694bf272646aff383d12157a85, type: 3}
+      propertyPath: m_Size.x
+      value: 0.8673836
       objectReference: {fileID: 0}
     - target: {fileID: 8823515282178925912, guid: 7144cc694bf272646aff383d12157a85, type: 3}
       propertyPath: m_Size.y
-      value: 0.31682444
+      value: 0.19224548
       objectReference: {fileID: 0}
     - target: {fileID: 8823515282178925912, guid: 7144cc694bf272646aff383d12157a85, type: 3}
       propertyPath: m_Size.z
-      value: 0.47757187
+      value: 0.9598131
+      objectReference: {fileID: 0}
+    - target: {fileID: 8823515282178925912, guid: 7144cc694bf272646aff383d12157a85, type: 3}
+      propertyPath: m_Center.x
+      value: 0.0060280114
       objectReference: {fileID: 0}
     - target: {fileID: 8823515282178925912, guid: 7144cc694bf272646aff383d12157a85, type: 3}
       propertyPath: m_Center.y
-      value: 0.0040186644
+      value: 0.0020093918
       objectReference: {fileID: 0}
     - target: {fileID: 8823515282178925912, guid: 7144cc694bf272646aff383d12157a85, type: 3}
       propertyPath: m_Center.z
-      value: 0.000000014901161
+      value: -0.22504604
       objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 4048569126782842884, guid: 7144cc694bf272646aff383d12157a85, type: 3}
+    m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7144cc694bf272646aff383d12157a85, type: 3}

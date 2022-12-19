@@ -467,6 +467,7 @@ MonoBehaviour:
   - {fileID: 5664626240657865359, guid: 83c66c76ed1b98e438d54cccf8930a9f, type: 3}
   - {fileID: 4220425548514975327, guid: 0b330ee9fabaeb240b159213fa3edd2d, type: 3}
   - {fileID: 3085136393917595245, guid: 082fb9edb50bae7448c897e56ea421c2, type: 3}
+  - {fileID: 4932561914457566715, guid: efa1d3fd2ca27574aa1a0aa93603fe3c, type: 3}
   foodSupply: 4
   foodSpawnFreq: 1
   layerMaskFood:
