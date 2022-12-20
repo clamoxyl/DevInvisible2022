@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening;
 
 public class FoodItem : MonoBehaviour
 {
@@ -13,9 +14,12 @@ public class FoodItem : MonoBehaviour
     [SerializeField]
     private Transform meshTr;
     [SerializeField]
-    private int foodID = 0;
+    private int foodID = 0;    
+
+    private Transform mouthPosition;
 
     public int FoodID { get => foodID; set => foodID = value; }
+    public Transform MouthPosition { get => mouthPosition; set => mouthPosition = value; }
 
     // Start is called before the first frame update
     void Start()
@@ -37,7 +41,10 @@ public class FoodItem : MonoBehaviour
 
     public void EatFoodItem()
     {
-        DisableFoodItem();
+        rb.isKinematic = true;
+        col.enabled = false;
+        rb.transform.DOMove(mouthPosition.position, 0.2f).SetEase(Ease.InOutQuad).onComplete = DisableFoodItem;
+        //DisableFoodItem();
     }
 
     private IEnumerator AutoRecycleItem()

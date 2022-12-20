@@ -18,6 +18,9 @@ ModelImporter:
   - first:
       74: -7675270891520791035
     second: Armature|idle (1)
+  - first:
+      74: 3243392290577434160
+    second: Armature|open_mouth (1)
   externalObjects:
   - first:
       type: UnityEngine:Material
@@ -52,11 +55,11 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: Armature|idle
-      takeName: Armature|idle
+      name: Armature|open_mouth (1)
+      takeName: Armature|open_mouth
       internalID: 0
       firstFrame: 0
-      lastFrame: 48
+      lastFrame: 6
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -75,7 +78,14 @@ ModelImporter:
       mirror: 0
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
-      events: []
+      events:
+      - time: 0
+        functionName: NewEvent
+        data: 
+        objectReferenceParameter: {fileID: 11500000, guid: 12064685cd3af16479b65bed23c88877, type: 3}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
       transformMask: []
       maskType: 3
       maskSource: {instanceID: 0}

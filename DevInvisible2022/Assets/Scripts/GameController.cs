@@ -24,6 +24,18 @@ public class GameController : MonoBehaviour
     private AudioSource audioSrc;
     [SerializeField]
     private AudioClip[] meowClips;
+    [SerializeField]
+    private Transform mouthPosition;
+
+    [Header("CAT ANIMATION")]
+    [SerializeField]
+    private Animator catAnimator;
+    [SerializeField]
+    private Material catMaterial;
+    [SerializeField]
+    private Texture catIdleTexture;
+    [SerializeField]
+    private Texture catOpenMouthTexture;
 
     [Header("UI")]
     [SerializeField]
@@ -116,6 +128,10 @@ public class GameController : MonoBehaviour
 
     private void NomNom (int foodInMouth)
     {
+        catAnimator.SetTrigger("Nom");
+        catMaterial.SetTexture("_MainTex", catOpenMouthTexture);
+        StartCoroutine(CloseMouth());
+
         if (foodInMouth == levelCravings[currentCraving])
         {
             currentCraving++;
@@ -136,6 +152,7 @@ public class GameController : MonoBehaviour
             {
                 Debug.Log(hitData.collider.gameObject.name);
                 FoodItem clickedFood = hitData.collider.transform.parent.gameObject.GetComponent<FoodItem>();
+                clickedFood.MouthPosition = mouthPosition;
                 NomNom(clickedFood.FoodID);
                 clickedFood.EatFoodItem();
             }
@@ -155,5 +172,11 @@ public class GameController : MonoBehaviour
     void Purr()
     {
 
+    }
+
+    private IEnumerator CloseMouth()
+    {
+        yield return new WaitForSeconds(0.22f);
+        catMaterial.SetTexture("_MainTex", catIdleTexture);
     }
 }
