@@ -58,7 +58,7 @@ PrefabInstance:
     - target: {fileID: 4683802739142401087, guid: 7144cc694bf272646aff383d12157a85, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 6924281783087301770, guid: 6751936b11b7b38458724a1e59105acf, type: 3}
+      objectReference: {fileID: 2100000, guid: 7ae3859fc71f39241aaed996e01b7e80, type: 2}
     - target: {fileID: 8281598045363900053, guid: 7144cc694bf272646aff383d12157a85, type: 3}
       propertyPath: m_Name
       value: Food Variant 04

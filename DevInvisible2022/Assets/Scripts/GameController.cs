@@ -40,16 +40,23 @@ public class GameController : MonoBehaviour
     [Header("UI")]
     [SerializeField]
     private TMP_Text levelText;
+    [SerializeField]
+    private TMP_Text foodText;
 
 
     private List<GameObject> food;
     private bool startGame = true;
     private float startTime;
     private float lastFoodSpawnTime = -Mathf.Infinity;
-    private int currentLevel = 1;
+    private int currentLevel = 0;
     private List<int> levelCravings;
 
     private int currentCraving = 0;
+
+    private bool inhibitClicks = false;
+
+    private int lastGeneratedCraving = 0;
+        
 
     // Start is called before the first frame update
     void Start()
@@ -70,21 +77,27 @@ public class GameController : MonoBehaviour
         }
 
         startTime = Time.time;
-        //spawn initial food supply
 
-        GenerateLevelCravings(levels[currentLevel]);
-        
+        GenerateLevelCravings(levels[currentLevel]); //generate number of cravings for current level
+
+        Meow(levelCravings[currentCraving]); // ask for the first food item
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        /*if (Input.GetKeyDown(KeyCode.Space))
+        if (startGame)
         {
-            SpawnFood();
-        }*/
-        FoodSpawnRateControl();
-        CheckClickOnFood();
+            //spawn food
+            FoodSpawnRateControl();
+            //check food interactions
+            CheckClickOnFood();
+        }
+        else
+        {
+            foodText.text = "You appeased the beast!";
+        }
 
     }
 
@@ -105,8 +118,8 @@ public class GameController : MonoBehaviour
         {
             if (!food[i].activeSelf)
             {
-                Vector2 circle = Random.insideUnitCircle * 3.0f;
-                Vector3 newPos = new Vector3(circle.x * 2.0f, 5.0f, circle.y - 3); // set a random position 1.5 units away from the center, inside a 4.5 units radius circle, 5 units high
+                Vector2 circle = Random.insideUnitCircle * 2.0f;
+                Vector3 newPos = new Vector3(circle.x * 2.0f, 5.0f, circle.y - 3); // set a random position 1.5 units away from the center, inside a 4 units radius circle, 5 units high
                 food[i].transform.rotation = Random.rotation;
                 food[i].transform.position = cat.transform.position + newPos;
                 food[i].SetActive(true);
@@ -120,31 +133,60 @@ public class GameController : MonoBehaviour
         levelCravings = new List<int>();
         for (int i = 0; i < amount; i++)
         {
-            levelCravings.Add(Random.Range(1, foodItems.Length));
+            int newCraving;
+            do
+            {
+                newCraving = Random.Range(1, foodItems.Length);
+            }
+            while (newCraving == lastGeneratedCraving);
+            lastGeneratedCraving = newCraving;
+            levelCravings.Add(newCraving);
         }
 
-        levelText.text = "Level " + currentLevel.ToString();
+        levelText.text = "Level " + (currentLevel + 1).ToString();
     }
 
     private void NomNom (int foodInMouth)
     {
+        inhibitClicks = true;
+
         catAnimator.SetTrigger("Nom");
         catMaterial.SetTexture("_MainTex", catOpenMouthTexture);
         StartCoroutine(CloseMouth());
+        StartCoroutine(ReactivateClicks());
 
-        if (foodInMouth == levelCravings[currentCraving])
+        if (foodInMouth == levelCravings[currentCraving]) //Check if cat ate what it was craving
         {
             currentCraving++;
             Purr();
+            Debug.Log("Right Food");
         }
-        else MeowInDisgust();
+        else
+        {
+            Debug.Log("Wrong Food");
+            MeowInDisgust();
+        }
 
-        Meow(levelCravings[currentCraving]);
+        if (currentCraving <= levelCravings.Count - 1) //Ask for the next craving or insist in what the cat wants
+        {
+            Meow(levelCravings[currentCraving]);
+        }
+        else if (currentLevel < levels.Length - 1) //Advance level and update cravings
+        {
+            currentLevel++;
+            currentCraving = 0;
+            GenerateLevelCravings(levels[currentLevel]);
+            Meow(levelCravings[currentCraving]); //Ask for the next craving
+        }
+        else
+        {
+            startGame = false;
+        }
     }
 
     void CheckClickOnFood()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (!inhibitClicks && Input.GetMouseButtonDown(0))
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hitData = new RaycastHit();
@@ -161,7 +203,23 @@ public class GameController : MonoBehaviour
 
     void Meow (int craving)
     {
+        foodText.text = "(" + currentCraving.ToString() + "/" + levels[currentLevel].ToString() + ") ";
 
+        switch (craving)
+        {
+            case 1:
+                foodText.text = foodText.text + "Candy Cane";
+                break;
+            case 2:
+                foodText.text = foodText.text + "Gingerbread Man";
+                break;
+            case 3:
+                foodText.text = foodText.text + "Mantecado";
+                break;
+            case 4:
+                foodText.text = foodText.text + "Reindeer Cookie";
+                break;
+        }
     }
 
     void MeowInDisgust()
@@ -178,5 +236,11 @@ public class GameController : MonoBehaviour
     {
         yield return new WaitForSeconds(0.22f);
         catMaterial.SetTexture("_MainTex", catIdleTexture);
+    }
+
+    private IEnumerator ReactivateClicks()
+    {
+        yield return new WaitForSeconds(0.4f);
+        inhibitClicks = false;
     }
 }
