@@ -96,7 +96,8 @@ public class GameController : MonoBehaviour
         }
         else
         {
-            foodText.text = "You appeased the beast!";
+            foodText.text = "¡Has calmado a la Bestia! ¡Feliz Navidad!";
+            levelText.text = "";
         }
 
     }
@@ -143,7 +144,7 @@ public class GameController : MonoBehaviour
             levelCravings.Add(newCraving);
         }
 
-        levelText.text = "Level " + (currentLevel + 1).ToString();
+        levelText.text = "Nivel " + (currentLevel + 1).ToString();
     }
 
     private void NomNom (int foodInMouth)
@@ -208,16 +209,16 @@ public class GameController : MonoBehaviour
         switch (craving)
         {
             case 1:
-                foodText.text = foodText.text + "Candy Cane";
+                foodText.text = foodText.text + "Bastón de Caramelo";
                 break;
             case 2:
-                foodText.text = foodText.text + "Gingerbread Man";
+                foodText.text = foodText.text + "Hombre de Gengibre";
                 break;
             case 3:
                 foodText.text = foodText.text + "Mantecado";
                 break;
             case 4:
-                foodText.text = foodText.text + "Reindeer Cookie";
+                foodText.text = foodText.text + "Galleta de Reno";
                 break;
         }
     }
