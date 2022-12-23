@@ -68,6 +68,16 @@ public class GameManager : MonoBehaviour
         SceneManager.UnloadSceneAsync(id);
     }
 
+    public void ReloadScene (int id)
+    {
+        transitionCourtain.DOColor(courtainColor, 2.0f).SetEase(Ease.InOutQuad).onComplete = () =>
+        {
+            SceneManager.UnloadSceneAsync(id);
+            SceneManager.LoadScene(id, LoadSceneMode.Additive);
+            CourtainUp();
+        };
+    }
+
     public void CourtainUp()
     {
         Color col = courtainColor;
@@ -96,6 +106,7 @@ public class GameManager : MonoBehaviour
                 musicSrc.Stop();
                 musicSrc.clip = clip;
                 musicSrc.Play();
+                musicSrc.DOFade(1, 2f);
             };
         }
         else

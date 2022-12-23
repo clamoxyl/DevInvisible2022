@@ -36,7 +36,7 @@ public class FoodItem : MonoBehaviour
     private void OnEnable()
     {
         EnableFoodItem();
-        StartCoroutine(AutoRecycleItem());
+        //StartCoroutine(AutoRecycleItem());
     }
 
     public void EatFoodItem()
@@ -53,7 +53,7 @@ public class FoodItem : MonoBehaviour
         DisableFoodItem();
     }
 
-    void DisableFoodItem()
+    public void DisableFoodItem()
     {
         rb.isKinematic = true;
         col.enabled = false;

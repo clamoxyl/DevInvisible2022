@@ -19,7 +19,7 @@ public class GameController : MonoBehaviour
     [SerializeField]
     LayerMask layerMaskFood;
     [SerializeField]
-    private int[] levels;
+    private int[] levels; // each position represents a level and each number inside these positions represents the number of treats the cat demands
     [SerializeField]
     private AudioSource audioSrc;
     [SerializeField]
@@ -46,6 +46,7 @@ public class GameController : MonoBehaviour
 
     private List<GameObject> food;
     private bool startGame = true;
+    private bool levelFoodServed = false;
     private float startTime;
     private float lastFoodSpawnTime = -Mathf.Infinity;
     private int currentLevel = 0;
@@ -61,6 +62,8 @@ public class GameController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        GameManager.Instance.PlayMusic(2);
+
         food = new List<GameObject>();
         GameObject newFood;
 
@@ -90,7 +93,12 @@ public class GameController : MonoBehaviour
         if (startGame)
         {
             //spawn food
-            FoodSpawnRateControl();
+            if (!levelFoodServed)
+            {
+                SpawnLevelFood();
+                levelFoodServed = true;
+            }
+            //FoodSpawnRateControl();
             //check food interactions
             CheckClickOnFood();
         }
@@ -102,7 +110,67 @@ public class GameController : MonoBehaviour
 
     }
 
-    void FoodSpawnRateControl()
+    void SpawnLevelFood()
+    {
+        if (currentLevel == 0) // Force candy cane spawn for level 0
+        {
+            SpawnFood(food[0]);
+            return;
+        }
+        else // Spawn twice as craved food for the rest of the levels
+        {
+            GameObject availableFood;
+
+            for (int i = 0; i < levelCravings.Count; i++) //Spawn the required food for the cravings
+            {
+                availableFood = FoodAvailable(levelCravings[i] - 1);
+
+                SpawnFood(availableFood);
+            }
+            /*
+            int type;
+
+            for (int i = 0; i < levelCravings.Count * 2; i++) //Spawn extra random food, twice as cravings, so 3 times the cravings in total
+            {                
+                do
+                {
+                    type = Random.Range(0, foodItems.Length);
+                    availableFood = FoodAvailable(type);
+                } while (availableFood != null);
+
+                Vector2 circle = Random.insideUnitCircle * 2.0f;
+                Vector3 newPos = new Vector3(circle.x * 2.0f, 5.0f, circle.y - 3); // set a random position 1.5 units away from the center, inside a 4 units radius circle, 5 units high
+                availableFood.transform.rotation = Random.rotation;
+                availableFood.transform.position = cat.transform.position + newPos;
+                availableFood.SetActive(true);                
+            }*/
+        }
+    }
+
+    GameObject FoodAvailable (int type)
+    {
+        for (int i = foodSupply * type; i < foodSupply * type + foodSupply; i++)
+        {
+            if (!food[i].activeSelf)
+            {
+                return food[i];
+            }
+        }
+        return null; 
+    }
+
+    void DeleteLevelFood()
+    {
+        for (int i = 0; i < food.Count; i++)
+        {
+            if (food[i].activeSelf)
+            {
+                food[i].GetComponent<FoodItem>().DisableFoodItem();
+            }
+        }
+    }
+
+    /*void FoodSpawnRateControl() // Constant rate. Not in use for the game.
     {
         if (Time.time - lastFoodSpawnTime >= foodSpawnFreq)
         {
@@ -111,7 +179,8 @@ public class GameController : MonoBehaviour
         }
     }
 
-    void SpawnFood()
+    //old food spawner.
+    void SpawnFood() 
     {
         int type = Random.Range(0, foodItems.Length);
 
@@ -127,21 +196,41 @@ public class GameController : MonoBehaviour
                 return;
             }            
         }
+    }*/
+
+    void SpawnFood(GameObject food)
+    {
+        Vector2 circle = Random.insideUnitCircle;
+        Vector3 newPos = new Vector3(circle.x * 2, 5.0f, circle.y - 4); 
+        food.transform.rotation = Random.rotation;
+        food.transform.position = cat.transform.position + newPos;
+        food.SetActive(true);
     }
 
     void GenerateLevelCravings(int amount)
     {
         levelCravings = new List<int>();
-        for (int i = 0; i < amount; i++)
+        if (currentLevel == 0)
         {
-            int newCraving;
-            do
+            levelCravings.Add(1); // Force just one candy cane for level 1, as tutorial
+        }
+        else
+        {
+            for (int i = 0; i < amount; i++)
             {
-                newCraving = Random.Range(1, foodItems.Length);
+                int newCraving;
+                do
+                {
+                    newCraving = Random.Range(1, foodItems.Length);
+                }
+                while (newCraving == lastGeneratedCraving);
+                lastGeneratedCraving = newCraving;
+                levelCravings.Add(newCraving);
             }
-            while (newCraving == lastGeneratedCraving);
-            lastGeneratedCraving = newCraving;
-            levelCravings.Add(newCraving);
+        }
+        foreach (var item in levelCravings)
+        {
+            Debug.Log(item.ToString());
         }
 
         levelText.text = "Nivel " + (currentLevel + 1).ToString();
@@ -166,18 +255,21 @@ public class GameController : MonoBehaviour
         {
             Debug.Log("Wrong Food");
             MeowInDisgust();
+            GameManager.Instance.ReloadScene(2);
         }
 
         if (currentCraving <= levelCravings.Count - 1) //Ask for the next craving or insist in what the cat wants
         {
             Meow(levelCravings[currentCraving]);
         }
-        else if (currentLevel < levels.Length - 1) //Advance level and update cravings
+        else if (currentLevel < levels.Length - 1) //Advance level, update cravings, delete old food and spawn new food
         {
             currentLevel++;
             currentCraving = 0;
             GenerateLevelCravings(levels[currentLevel]);
             Meow(levelCravings[currentCraving]); //Ask for the next craving
+            //DeleteLevelFood();
+            levelFoodServed = false;
         }
         else
         {
