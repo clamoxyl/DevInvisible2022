@@ -304,7 +304,7 @@ public class GameController : MonoBehaviour
                 foodText.text = foodText.text + "Bastón de Caramelo";
                 break;
             case 2:
-                foodText.text = foodText.text + "Hombre de Gengibre";
+                foodText.text = foodText.text + "Hombre de Jengibre";
                 break;
             case 3:
                 foodText.text = foodText.text + "Mantecado";
