@@ -607,7 +607,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -815}
+  m_AnchoredPosition: {x: 0, y: -490}
   m_SizeDelta: {x: 450, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &998447112
@@ -840,8 +840,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   loreText: {fileID: 1848173271}
   loreBG: {fileID: 800196931}
-  scrollDuration: 65
-  scrollFinalPosY: 300
+  scrollDuration: 40
+  scrollFinalPosY: 200
 --- !u!4 &1343588158
 Transform:
   m_ObjectHideFlags: 0
@@ -1203,7 +1203,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -730}
+  m_AnchoredPosition: {x: 0, y: -543}
   m_SizeDelta: {x: 700, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1848173271
@@ -1227,17 +1227,13 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_text: "Desde hace eones la humanidad ha luchado por sobrevivir en un mundo hostil,
-    lleno de amenazas que acechan en los rincones m\xE1s oscuros.\n\nGracias al ingenio
-    humano, hemos logrado sobrevivir a depredadores, enfermedades, climas extremos
-    y cualquier calamidad que se ha interpuesto en nuestro camino hacia la supremac\xEDa
-    biol\xF3gica.\n\nPero, a pesar de nuestros esfuerzos, hay un mal ancestral que
-    nos acecha. Una criatura tan anciana como el mundo y tan poderosa como el miedo.\n\nLa
-    criatura no puede ser destruida, pero su hambre puede ser aplacada. Tu eres el
-    elegido, uno de los miles que a\xF1o tras a\xF1o ha logrado saciar a la bestia
-    y prolongar la estancia de la humanidad en la Tierra.\n\nAhora ya conoces el
-    verdadero sentido de la navidad, una tradici\xF3n creada para atiborrar al Gatete
-    de dulces y conseguir sellar su poder hasta el pr\xF3ximo solsticio de invierno.\n\n\xBFEstar\xE1s
-    a la altura o nos condenar\xE1s a todos?\n\nAprende el lenguaje de la bestia!"
+    lleno de amenazas que acechan en los rincones m\xE1s oscuros.\n\nUn mal ancestral
+    se cierne sobre nosotros. Una criatura tan anciana como el mundo y tan poderosa
+    como el miedo.\n\nLa criatura no puede ser destruida, pero su hambre puede ser
+    aplacada. \xA1Aprende el lenguaje de la bestia y s\xE1lvanos!\n\nAhora ya conoces
+    el verdadero sentido de la navidad, una tradici\xF3n creada para atiborrar al
+    Gatete de dulces y conseguir sellar su poder hasta el pr\xF3ximo solsticio de
+    invierno.\n\n\xBFEstar\xE1s a la altura o nos condenar\xE1s a todos?"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 9d0abbc92c50621439de9d1acfdc9f0f, type: 2}
   m_sharedMaterial: {fileID: -4211040182497762215, guid: 9d0abbc92c50621439de9d1acfdc9f0f, type: 2}
