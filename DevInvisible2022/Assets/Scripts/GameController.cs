@@ -40,6 +40,8 @@ public class GameController : MonoBehaviour
     private Texture catIdleTexture;
     [SerializeField]
     private Texture catOpenMouthTexture;
+    [SerializeField]
+    private Texture catTalkTexture;
 
     [Header("UI")]
     [SerializeField]
@@ -114,7 +116,7 @@ public class GameController : MonoBehaviour
         }
         else
         {
-            foodText.text = "¡Has calmado a la Bestia!";
+            foodText.text = "¡Has saciado a la Bestia y volverá a su cripta! ";
             levelText.text = "";
         }
 
@@ -206,13 +208,13 @@ public class GameController : MonoBehaviour
         if (foodInMouth == levelCravings[currentCraving]) //Check if cat ate what it was craving
         {
             currentCraving++;
-            Meow(4);
+            Meow(5);
             Debug.Log("Right Food");
         }
         else
         {
             Debug.Log("Wrong Food");
-            Meow(5);
+            Meow(6);
             GameManager.Instance.ReloadScene(2);
         }
 
@@ -270,7 +272,8 @@ public class GameController : MonoBehaviour
     void Meow (int craving)
     {
         foodText.text = "(" + currentCraving.ToString() + "/" + levels[currentLevel].ToString() + ") ";
-
+        catMaterial.SetTexture("_MainTex", catTalkTexture);
+        StartCoroutine(CloseMouth());
         /*switch (craving)
         {
             case 1:

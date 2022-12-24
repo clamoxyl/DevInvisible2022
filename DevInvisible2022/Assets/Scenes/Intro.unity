@@ -840,7 +840,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   loreText: {fileID: 1848173271}
   loreBG: {fileID: 800196931}
-  scrollDuration: 2
+  scrollDuration: 65
   scrollFinalPosY: 300
 --- !u!4 &1343588158
 Transform:
@@ -1237,7 +1237,7 @@ MonoBehaviour:
     y prolongar la estancia de la humanidad en la Tierra.\n\nAhora ya conoces el
     verdadero sentido de la navidad, una tradici\xF3n creada para atiborrar al Gatete
     de dulces y conseguir sellar su poder hasta el pr\xF3ximo solsticio de invierno.\n\n\xBFEstar\xE1s
-    a la altura o nos condenar\xE1s a todos?"
+    a la altura o nos condenar\xE1s a todos?\n\nAprende el lenguaje de la bestia!"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 9d0abbc92c50621439de9d1acfdc9f0f, type: 2}
   m_sharedMaterial: {fileID: -4211040182497762215, guid: 9d0abbc92c50621439de9d1acfdc9f0f, type: 2}
