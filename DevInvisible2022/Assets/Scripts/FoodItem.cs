@@ -20,31 +20,12 @@ public class FoodItem : MonoBehaviour
 
     public int FoodID { get => foodID; set => foodID = value; }
     public Transform MouthPosition { get => mouthPosition; set => mouthPosition = value; }
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
-    private void OnEnable()
-    {
-        EnableFoodItem();
-        //StartCoroutine(AutoRecycleItem());
-    }
-
+    public Rigidbody Rb { get => rb; set => rb = value; }
+    public Collider Col { get => col; set => col = value; }
+    
     public void EatFoodItem()
     {
-        rb.isKinematic = true;
-        col.enabled = false;
-        rb.transform.DOMove(mouthPosition.position, 0.2f).SetEase(Ease.InOutQuad).onComplete = DisableFoodItem;
-        //DisableFoodItem();
+        Rb.transform.DOMove(mouthPosition.position, 0.2f).SetEase(Ease.InOutQuad).onComplete = DisableFoodItem;        
     }
 
     private IEnumerator AutoRecycleItem()
@@ -55,14 +36,24 @@ public class FoodItem : MonoBehaviour
 
     public void DisableFoodItem()
     {
-        rb.isKinematic = true;
-        col.enabled = false;
+        Rb.isKinematic = true;
+        Col.enabled = false;
+        Rb.transform.position = transform.position;
         gameObject.SetActive(false);
     }
 
-    void EnableFoodItem()
+    public void EnableFoodItem(float delay)
     {
-        rb.isKinematic = false;
-        col.enabled = true;
+        gameObject.SetActive(true);        
+        StartCoroutine(DelayedCollider(delay));        
+        transform.rotation = Random.rotation;
+    }
+
+    IEnumerator DelayedCollider(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        Col.enabled = true;
+        Rb.isKinematic = false;
+        Rb.velocity = Vector3.zero;
     }
 }

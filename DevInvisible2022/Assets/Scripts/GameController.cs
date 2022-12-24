@@ -11,7 +11,7 @@ public class GameController : MonoBehaviour
     [SerializeField]
     private GameObject cat;
     [SerializeField]
-    private GameObject[] foodItems;
+    private GameObject[] foodPool;
     [SerializeField]
     private int foodSupply = 10;
     [SerializeField]
@@ -21,12 +21,16 @@ public class GameController : MonoBehaviour
     [SerializeField]
     private int[] levels; // each position represents a level and each number inside these positions represents the number of treats the cat demands
     [SerializeField]
-    private AudioSource audioSrc;
+    private Transform mouthPosition;
+    [SerializeField]
+    private Transform[] foodSpawnPositions;
+
+    [Header("AUDIO")]
+    [SerializeField]
+    private AudioSource sfxSrc;
     [SerializeField]
     private AudioClip[] meowClips;
-    [SerializeField]
-    private Transform mouthPosition;
-
+        
     [Header("CAT ANIMATION")]
     [SerializeField]
     private Animator catAnimator;
@@ -45,6 +49,7 @@ public class GameController : MonoBehaviour
 
 
     private List<GameObject> food;
+    private List<FoodItem> foodItems;
     private bool startGame = true;
     private bool levelFoodServed = false;
     private float startTime;
@@ -65,17 +70,22 @@ public class GameController : MonoBehaviour
         GameManager.Instance.PlayMusic(2);
 
         food = new List<GameObject>();
+        foodItems = new List<FoodItem>();
         GameObject newFood;
 
-        //instantiate each food pool
-        for (int i = 0; i < foodItems.Length; i++)
+        //instantiate food pool
+        for (int i = 0; i < foodPool.Length; i++)
         {
             for (int j = 0; j < foodSupply; j++)
             {
-                newFood = Instantiate(foodItems[i]);
+                newFood = Instantiate(foodPool[i]);
                 newFood.transform.SetParent(transform);
+                newFood.transform.position = foodSpawnPositions[(j + (i * foodSupply)) % foodSpawnPositions.Length].position;                
+                food.Add(newFood);
+                FoodItem newFoodItem = newFood.GetComponent<FoodItem>();
+                newFoodItem.DisableFoodItem();
+                foodItems.Add(newFoodItem);
                 newFood.SetActive(false);
-                food.Add(newFood);           
             }
         }
 
@@ -104,7 +114,7 @@ public class GameController : MonoBehaviour
         }
         else
         {
-            foodText.text = "¡Has calmado a la Bestia! ¡Feliz Navidad!";
+            foodText.text = "¡Has calmado a la Bestia!";
             levelText.text = "";
         }
 
@@ -114,49 +124,28 @@ public class GameController : MonoBehaviour
     {
         if (currentLevel == 0) // Force candy cane spawn for level 0
         {
-            SpawnFood(food[0]);
+            SpawnFood(food[0], foodItems[0], 0);
             return;
         }
         else // Spawn twice as craved food for the rest of the levels
         {
-            GameObject availableFood;
-
             for (int i = 0; i < levelCravings.Count; i++) //Spawn the required food for the cravings
             {
-                availableFood = FoodAvailable(levelCravings[i] - 1);
-
-                SpawnFood(availableFood);
-            }
-            /*
-            int type;
-
-            for (int i = 0; i < levelCravings.Count * 2; i++) //Spawn extra random food, twice as cravings, so 3 times the cravings in total
-            {                
-                do
-                {
-                    type = Random.Range(0, foodItems.Length);
-                    availableFood = FoodAvailable(type);
-                } while (availableFood != null);
-
-                Vector2 circle = Random.insideUnitCircle * 2.0f;
-                Vector3 newPos = new Vector3(circle.x * 2.0f, 5.0f, circle.y - 3); // set a random position 1.5 units away from the center, inside a 4 units radius circle, 5 units high
-                availableFood.transform.rotation = Random.rotation;
-                availableFood.transform.position = cat.transform.position + newPos;
-                availableFood.SetActive(true);                
-            }*/
+                FoodAvailable(levelCravings[i] - 1, i);
+            }            
         }
     }
 
-    GameObject FoodAvailable (int type)
+    void FoodAvailable (int type, int delay)
     {
         for (int i = foodSupply * type; i < foodSupply * type + foodSupply; i++)
         {
             if (!food[i].activeSelf)
             {
-                return food[i];
+                SpawnFood(food[i], foodItems[i], delay);
+                return;
             }
         }
-        return null; 
     }
 
     void DeleteLevelFood()
@@ -165,46 +154,15 @@ public class GameController : MonoBehaviour
         {
             if (food[i].activeSelf)
             {
-                food[i].GetComponent<FoodItem>().DisableFoodItem();
+                foodItems[i].DisableFoodItem();
             }
         }
     }
-
-    /*void FoodSpawnRateControl() // Constant rate. Not in use for the game.
+    
+    void SpawnFood(GameObject foodObj, FoodItem foodIt, int i)
     {
-        if (Time.time - lastFoodSpawnTime >= foodSpawnFreq)
-        {
-            SpawnFood();
-            lastFoodSpawnTime = Time.time;
-        }
-    }
-
-    //old food spawner.
-    void SpawnFood() 
-    {
-        int type = Random.Range(0, foodItems.Length);
-
-        for (int i = foodSupply * type; i < foodSupply * type + foodSupply; i++)
-        {
-            if (!food[i].activeSelf)
-            {
-                Vector2 circle = Random.insideUnitCircle * 2.0f;
-                Vector3 newPos = new Vector3(circle.x * 2.0f, 5.0f, circle.y - 3); // set a random position 1.5 units away from the center, inside a 4 units radius circle, 5 units high
-                food[i].transform.rotation = Random.rotation;
-                food[i].transform.position = cat.transform.position + newPos;
-                food[i].SetActive(true);
-                return;
-            }            
-        }
-    }*/
-
-    void SpawnFood(GameObject food)
-    {
-        Vector2 circle = Random.insideUnitCircle;
-        Vector3 newPos = new Vector3(circle.x * 2, 5.0f, circle.y - 4); 
-        food.transform.rotation = Random.rotation;
-        food.transform.position = cat.transform.position + newPos;
-        food.SetActive(true);
+        foodObj.SetActive(true);
+        foodIt.EnableFoodItem(i * .5f);
     }
 
     void GenerateLevelCravings(int amount)
@@ -221,7 +179,7 @@ public class GameController : MonoBehaviour
                 int newCraving;
                 do
                 {
-                    newCraving = Random.Range(1, foodItems.Length);
+                    newCraving = Random.Range(1, foodPool.Length +1);
                 }
                 while (newCraving == lastGeneratedCraving);
                 lastGeneratedCraving = newCraving;
@@ -248,15 +206,22 @@ public class GameController : MonoBehaviour
         if (foodInMouth == levelCravings[currentCraving]) //Check if cat ate what it was craving
         {
             currentCraving++;
-            Purr();
+            Meow(4);
             Debug.Log("Right Food");
         }
         else
         {
             Debug.Log("Wrong Food");
-            MeowInDisgust();
+            Meow(5);
             GameManager.Instance.ReloadScene(2);
         }
+
+        StartCoroutine(NextCraving());
+    }
+
+    IEnumerator NextCraving()
+    {
+        yield return new WaitForSeconds(2);
 
         if (currentCraving <= levelCravings.Count - 1) //Ask for the next craving or insist in what the cat wants
         {
@@ -274,7 +239,15 @@ public class GameController : MonoBehaviour
         else
         {
             startGame = false;
+            StartCoroutine(GoToCredits());
         }
+    }
+
+    IEnumerator GoToCredits()
+    {
+        yield return new WaitForSeconds(3);
+        GameManager.Instance.LoadSceneAdditive(3);
+        GameManager.Instance.UnloadScene(2);
     }
 
     void CheckClickOnFood()
@@ -298,7 +271,7 @@ public class GameController : MonoBehaviour
     {
         foodText.text = "(" + currentCraving.ToString() + "/" + levels[currentLevel].ToString() + ") ";
 
-        switch (craving)
+        /*switch (craving)
         {
             case 1:
                 foodText.text = foodText.text + "Bastón de Caramelo";
@@ -311,19 +284,11 @@ public class GameController : MonoBehaviour
                 break;
             case 4:
                 foodText.text = foodText.text + "Galleta de Reno";
-                break;
-        }
-    }
+                break;            
+        }*/
 
-    void MeowInDisgust()
-    {
-
-    }
-
-    void Purr()
-    {
-
-    }
+        sfxSrc.PlayOneShot(meowClips[craving-1]);
+    }    
 
     private IEnumerator CloseMouth()
     {

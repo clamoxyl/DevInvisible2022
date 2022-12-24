@@ -2,7 +2,22 @@ fileFormatVersion: 2
 guid: 6751936b11b7b38458724a1e59105acf
 ModelImporter:
   serializedVersion: 20200
-  internalIDToNameTable: []
+  internalIDToNameTable:
+  - first:
+      74: 2146225131153753478
+    second: neutral
+  - first:
+      74: -4221878252579125857
+    second: open_mouth
+  - first:
+      74: -1978303741906493279
+    second: Armature|idle
+  - first:
+      74: -3717194154655804901
+    second: Armature|neutral
+  - first:
+      74: 7219076745778750086
+    second: Armature|open_mouth
   externalObjects:
   - first:
       type: UnityEngine:Material

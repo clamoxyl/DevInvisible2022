@@ -32,11 +32,13 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     private AudioSource musicSrc;
     [SerializeField]
-    private AudioSource sfxSrc;
-    [SerializeField]
     private AudioClip menuMusic;
     [SerializeField]
     private AudioClip gameMusic;
+    [SerializeField]
+    private AudioClip endMusic;
+    [SerializeField]
+    private float musicMaxVolume = 0.3f;
 
     private Color courtainColor;
 
@@ -49,6 +51,7 @@ public class GameManager : MonoBehaviour
         courtainColor = transitionCourtain.color;
         LoadSceneAdditive(1);
         CourtainUp();
+        musicSrc.volume = musicMaxVolume;
     }
 
     public void LoadSceneAdditive (int id)
@@ -97,16 +100,19 @@ public class GameManager : MonoBehaviour
             case 2:
                 clip = gameMusic;
                 break;
+            case 3:
+                clip = endMusic;
+                break;
         }
 
         if (musicSrc.isPlaying)
         {
-            musicSrc.DOFade(0, 2f).onComplete = () =>
+            musicSrc.DOFade(0, .7f).onComplete = () =>
             {
                 musicSrc.Stop();
                 musicSrc.clip = clip;
                 musicSrc.Play();
-                musicSrc.DOFade(1, 2f);
+                musicSrc.DOFade(musicMaxVolume, .7f);
             };
         }
         else
